@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YGstudio97 - Developer Blog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Light Mode (Default) */
+            --bg-gradient-start: #ffffff;
+            --bg-gradient-end: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --accent-cyan: #0ea5e9;
+            --accent-purple: #8b5cf6;
+            --card-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --pill-bg: rgba(14, 165, 233, 0.1);
+            --pill-text: #0369a1;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode */
+            --bg-gradient-start: #0f172a;
+            --bg-gradient-end: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --accent-cyan: #38bdf8;
+            --accent-purple: #a78bfa;
+            --card-hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            --pill-bg: rgba(56, 189, 248, 0.15);
+            --pill-text: #7dd3fc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+            background: linear-gradient(180deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed) ease;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(14, 165, 233, 0.1);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Blog List View */
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .blog-card {
+            display: flex;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            transition: all var(--transition-speed) ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .blog-card-content {
+            flex: 6;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .category-pill {
+            display: inline-block;
+            background: var(--pill-bg);
+            color: var(--pill-text);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            width: fit-content;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .blog-meta {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .blog-card-image {
+            flex: 4;
+            overflow: hidden;
+        }
+
+        .blog-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .blog-card:hover .blog-card-image img {
+            transform: scale(1.03);
+        }
+
+        /* Single Post View */
+        .single-post {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            transition: all var(--transition-speed) ease;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            color: var(--accent-cyan);
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .back-button svg {
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .back-button:hover svg {
+            transform: translateX(-4px);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: var(--glass-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .post-metadata {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.8;
+        }
+
+        .post-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .interaction-bar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .interaction-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .interaction-btn:hover {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .interaction-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .blog-card {
+                flex-direction: column;
+            }
+
+            .blog-card-content,
+            .blog-card-image {
+                flex: none;
+            }
+
+            .blog-card-image {
+                height: 200px;
+            }
+
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .post-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-image {
+                height: 250px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo" onclick="showBlogList()">YGstudio97</div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showBlogList()">Home</a></li>
+            <li><a href="#" onclick="showBlogList()">Blog</a></li>
+        </ul>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg class="moon-icon hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Blog List View -->
+        <div class="blog-list" id="blogList">
+            <!-- Blog Card 1 -->
+            <a href="#" class="blog-card" onclick="showSinglePost(event, 'post1')">
+                <div class="blog-card-content">
+                    <span class="category-pill">Unity Development</span>
+                    <h2 class="blog-title">Optimizing Shaders in Unity for Mobile VR</h2>
+                    <p class="blog-meta">March 15, 2025 • 8 min read</p>
+                    <p class="blog-description">Deep dive into shader optimization techniques that reduced our VR game's frame time by 40%. Learn about mobile GPU architecture, draw call batching, and custom lighting models.</p>
+                </div>
+                <div class="blog-card-image">
+                    <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&h=600&fit=crop" alt="Shader optimization visualization">
+                </div>
+            </a>
+
+            <!-- Blog Card 2 -->
+            <a href="#" class="blog-card" onclick="showSinglePost(event, 'post2')">
+                <div class="blog-card-content">
+                    <span class="category-pill">Studio Update</span>
+                    <h2 class="blog-title">YGstudio97 Q1 2025 Development Roadmap</h2>
+                    <p class="blog-meta">March 8, 2025 • 5 min read</p>
+                    <p class="blog-description">Exciting updates from the studio! We're expanding our team, announcing two new projects, and sharing our vision for the next quarter. Plus, behind-the-scenes looks at our workflow.</p>
+                </div>
+                <div class="blog-card-image">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop" alt="Team collaboration">
+                </div>
+            </a>
+
+            <!-- Blog Card 3 -->
+            <a href="#" class="blog-card" onclick="showSinglePost(event, 'post3')">
+                <div class="blog-card-content">
+                    <span class="category-pill">Game Design</span>
+                    <h2 class="blog-title">Building Immersive NPC Dialogue Systems</h2>
+                    <p class="blog-meta">February 28, 2025 • 12 min read</p>
+                    <p class="blog-description">How we created a dynamic dialogue system that responds to player choices, world state, and character relationships. Includes code examples and design patterns.</p>
+                </div>
+                <div class="blog-card-image">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=600&fit=crop" alt="Game dialogue interface">
+                </div>
+            </a>
+
+            <!-- Blog Card 4 -->
+            <a href="#" class="blog-card" onclick="showSinglePost(event, 'post4')">
+                <div class="blog-card-content">
+                    <span class="category-pill">Technical Art</span>
+                    <h2 class="blog-title">Procedural Terrain Generation with Compute Shaders</h2>
+                    <p class="blog-meta">February 15, 2025 • 10 min read</p>
+                    <p class="blog-description">Leveraging GPU compute for real-time terrain generation. We explore noise algorithms, LOD systems, and how to achieve infinite worlds without performance hits.</p>
+                </div>
+                <div class="blog-card-image">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop" alt="Procedural terrain">
+                </div>
+            </a>
+        </div>
+
+        <!-- Single Post View -->
+        <article class="single-post" id="singlePost">
+            <a href="#" class="back-button" onclick="showBlogList()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Blog
+            </a>
+
+            <img class="hero-image" id="postHeroImage" src="" alt="Post hero image">
+
+            <span class="category-pill" id="postCategory"></span>
+            <h1 class="post-title" id="postTitle"></h1>
+
+            <div class="post-metadata">
+                <span id="postDate"></span>
+                <span id="postReadTime"></span>
+                <span>By YGstudio97 Team</span>
+            </div>
+
+            <div class="post-content" id="postContent">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+
+            <div class="interaction-bar">
+                <button class="interaction-btn" onclick="handleLike(this)">
+                    <span>👍</span>
+                    <span class="like-count">24</span>
+                </button>
+                <button class="interaction-btn" onclick="handleComment()">
+                    <span>💬</span>
+                    <span class="comment-count">8</span>
+                </button>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = themeToggle.querySelector('.sun-icon');
+        const moonIcon = themeToggle.querySelector('.moon-icon');
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            if (theme === 'dark') {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+        }
+
+        // Blog Posts Data
+        const blogPosts = {
+            post1: {
+                category: 'Unity Development',
+                title: 'Optimizing Shaders in Unity for Mobile VR',
+                date: 'March 15, 2025',
+                readTime: '8 min read',
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&h=600&fit=crop',
+                content: `
+                    <p>Virtual Reality on mobile platforms presents unique challenges, especially when it comes to shader performance. In this article, we'll explore the techniques we used to optimize our VR experience for Quest 2 and similar devices.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Understanding Mobile GPU Architecture</h3>
+                    <p>Mobile GPUs use a tile-based deferred rendering (TBDR) architecture, which is fundamentally different from desktop GPUs. Understanding this difference is crucial for writing efficient shaders.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Key Optimization Strategies</h3>
+                    <p>We focused on three main areas: reducing overdraw, minimizing texture fetches, and simplifying lighting calculations. By implementing these strategies, we achieved a 40% reduction in frame time.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Custom Lighting Model</h3>
+                    <p>Our custom baked lighting solution pre-computes complex lighting scenarios, allowing us to maintain visual fidelity while keeping runtime costs minimal. The results speak for themselves.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Conclusion</h3>
+                    <p>Optimization is an iterative process. Start with profiling, identify bottlenecks, and tackle them systematically. Your players will thank you for the smooth experience.</p>
+                `
+            },
+            post2: {
+                category: 'Studio Update',
+                title: 'YGstudio97 Q1 2025 Development Roadmap',
+                date: 'March 8, 2025',
+                readTime: '5 min read',
+                image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=600&fit=crop',
+                content: `
+                    <p>Welcome to our first quarterly update of 2025! We have some exciting news to share about the studio's direction, new team members, and upcoming projects.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Team Expansion</h3>
+                    <p>We're thrilled to welcome three new developers to the YGstudio97 family. Their expertise in VR development, technical art, and game design will be invaluable as we scale up production.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">New Projects Announced</h3>
+                    <p>Project Aurora, our sci-fi exploration game, enters alpha testing next month. Meanwhile, Project Nebula, a cozy simulation game, is progressing steadily toward its summer release window.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Looking Ahead</h3>
+                    <p>We're committed to transparency and regular updates. Stay tuned for more devlogs, behind-the-scenes content, and community events throughout the quarter.</p>
+                `
+            },
+            post3: {
+                category: 'Game Design',
+                title: 'Building Immersive NPC Dialogue Systems',
+                date: 'February 28, 2025',
+                readTime: '12 min read',
+                image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1200&h=600&fit=crop',
+                content: `
+                    <p>Creating believable NPC interactions is one of the most challenging aspects of game development. In this deep dive, we'll explore our approach to dynamic dialogue systems.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">The Foundation: State Machines</h3>
+                    <p>At its core, our dialogue system uses a hierarchical state machine. Each conversation branch represents a state, with transitions triggered by player choices, quest progress, or world events.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Contextual Responses</h3>
+                    <p>NPCs remember past interactions and adjust their responses accordingly. This creates a sense of continuity and makes each playthrough feel unique.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Implementation Details</h3>
+                    <p>We use ScriptableObjects in Unity to define dialogue trees, making it easy for designers to create and iterate on conversations without touching code. The system supports localization, voice acting triggers, and animation cues.</p>
+                `
+            },
+            post4: {
+                category: 'Technical Art',
+                title: 'Procedural Terrain Generation with Compute Shaders',
+                date: 'February 15, 2025',
+                readTime: '10 min read',
+                image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=600&fit=crop',
+                content: `
+                    <p>Generating vast, diverse terrains in real-time requires careful consideration of algorithms and hardware capabilities. Let's explore how we leveraged compute shaders for this task.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Noise Algorithms</h3>
+                    <p>We combine multiple layers of Perlin and Simplex noise at different frequencies to create natural-looking terrain features. The key is finding the right balance between randomness and coherence.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">GPU Acceleration</h3>
+                    <p>By moving noise calculations to the GPU via compute shaders, we can generate terrain chunks in milliseconds. This enables seamless streaming of an effectively infinite world.</p>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--text-primary);">Level of Detail (LOD)</h3>
+                    <p>Our LOD system dynamically adjusts mesh resolution based on camera distance. Combined with GPU instancing for vegetation, we maintain consistent frame rates even in dense environments.</p>
+                `
+            }
+        };
+
+        // Navigation Functions
+        function showBlogList() {
+            event.preventDefault();
+            document.getElementById('blogList').classList.remove('hidden');
+            document.getElementById('singlePost').classList.remove('visible');
+            document.getElementById('singlePost').style.display = 'none';
+            document.getElementById('blogList').style.display = 'flex';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSinglePost(event, postId) {
+            event.preventDefault();
+            const post = blogPosts[postId];
+
+            document.getElementById('postCategory').textContent = post.category;
+            document.getElementById('postTitle').textContent = post.title;
+            document.getElementById('postDate').textContent = post.date;
+            document.getElementById('postReadTime').textContent = post.readTime;
+            document.getElementById('postHeroImage').src = post.image;
+            document.getElementById('postContent').innerHTML = post.content;
+
+            document.getElementById('blogList').style.display = 'none';
+            document.getElementById('singlePost').style.display = 'block';
+            document.getElementById('singlePost').classList.add('visible');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Interaction Handlers
+        function handleLike(button) {
+            const countSpan = button.querySelector('.like-count');
+            let count = parseInt(countSpan.textContent);
+
+            if (button.classList.contains('liked')) {
+                count--;
+                button.classList.remove('liked');
+                button.style.color = 'var(--text-secondary)';
+            } else {
+                count++;
+                button.classList.add('liked');
+                button.style.color = 'var(--accent-cyan)';
+            }
+
+            countSpan.textContent = count;
+        }
+
+        function handleComment() {
+            alert('Comment feature coming soon! Join our Discord to discuss this post.');
+        }
+    </script>
+</body>
+</html>
